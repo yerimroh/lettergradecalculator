@@ -1,5 +1,6 @@
 from tkinter import*
 import tkinter.ttk as ttk
+import tkinter.messagebox as messagebox
 
 # initial steps
 root = Tk()
@@ -20,6 +21,7 @@ menu.add_cascade(label = "File", menu = fileMenu) # add filemenu to the overall 
 root.config(menu = menu) # apply the menu tab on the program
 
 ######################################################
+# --- < Variable > ---
 # Ask for Assignment Category Information
 category = ""
 
@@ -52,10 +54,9 @@ btn1.pack(side = "bottom")
 #######################################################
 ''' Subject Frame: assignmentFrame > labelFrame > btnFrame '''
 
+# --- < Variables > ---
 # Average grade calculated
 averageGrade = 0 # initial value
-# individual assignment grades(keep them in a list)
-gradelist = ["", "", "", "", ""] # initial given 5
 
 
 # ---0. <Subject Frame> ---
@@ -75,7 +76,6 @@ scrollbar.pack(side = "right", fill = "y")
 gradelistbox = Listbox(assignmentFrame, selectmode = "extended", height = 0, yscrollcommand = scrollbar.set)
 gradelistbox.pack(side = "left", fill = "both", expand = True)
 scrollbar.config(command = gradelistbox.yview)
-
 
 
 # --- 1.5 <Other Info Frame> ---
@@ -104,10 +104,25 @@ btnFrame.pack(side = "top", fill = "x", expand = True)
 
 # methods for the button
 def deleteScore():
-    pass
+    print(gradelistbox.curselection())
+    for i in range (0, gradelistbox.size()):
+        if gradelistbox.curselection() == (i,):
+            gradelistbox.delete(i)
 
 def addScore():
-    pass
+    if newScoreEntry.get().lower().islower():
+        messagebox.showinfo("Invalid Input", "Put in only number")
+        newScoreEntry.delete(0, END) # Clear the message box
+    elif newScoreEntry.get() == "": # If the user does not put in anything 
+        messagebox.showinfo("Invalid Input", "Put in your score")
+        newScoreEntry.delete(0, END) # Clear the message box
+    elif 0 > float(newScoreEntry.get()) or float(newScoreEntry.get()) > 100 : # If the user input score is invalid 
+        messagebox.showinfo("Invalid Input", "Score has to be inbetween 0 and 100")
+        newScoreEntry.delete(0, END) # Clear the message box
+    else :
+        gradelistbox.insert(END, newScoreEntry.get()) # Insert user input grade on the list
+        newScoreEntry.delete(0, END) # Clear the message box
+
 
 def calculateScore():
     pass
